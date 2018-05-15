@@ -2,7 +2,7 @@
 Docker Container Network에 대한 이해
 ==================================
 
-## docker0와 container network의 구조 ##
+## <docker0, container network의 구조> ##
  
 **NOTE**
 
@@ -48,7 +48,7 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 ![image](https://user-images.githubusercontent.com/20153890/40032150-c9f5701a-582d-11e8-8813-1c292cba2e71.png)
 
 
-먼저 Container가 생성되면, 해당 container에는 pair (peer) interface라고 하는 한 쌍의 interface가 생성된다.
+먼저 container가 생성되면, 해당 container에는 pair (peer) interface라고 하는 한 쌍의 interface가 생성된다.
 이 pair interface는 두 interface가 한쌍으로 구성되고, 마치 direct로 연결한 두 대의 PC처럼 packet을 주고받는다.
 
 즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당되고,
@@ -56,21 +56,25 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 
 > - $ip link
  
+![image](https://user-images.githubusercontent.com/20153890/40032227-344253ca-582e-11e8-8fd2-8433fdd2e6fd.png)
 
-Container를 하나 올린 상태에서 link를 확인해보면, running중인 container는 vethXXX라는 이름으로 docker0 bridge에 연결되어 있는 것을 확인 할 수 있다.
+container를 하나 올린 상태에서 link를 확인해보면, running중인 container는 vethXXX라는 이름으로 docker0 bridge에 연결되어 있는 것을 확인 할 수 있다.
  
-
 그럼 container내부에 할당된 eth0 interface는 어떻게 확인할까?
 이는 해당 namespace에서만 보이도록 격리되어 있으므로 running중인 container 내부에서 확인해야 한다.
 
-	$docker exec {container id} ifconfig eth0
+> -	$docker exec {container id} ifconfig eth0
+
+![image](https://user-images.githubusercontent.com/20153890/40032232-3b96a874-582e-11e8-9a9e-6d2f1f7d6a0a.png)
 
 container안에 외부 통신을 위한 eth0 interface가 있는 것을 볼 수 있고, 
 172.17.0.2라는 IP가 할당되었으며, netmask도 255.255.0.0으로 설정되어져 있는 것을 볼 수 있다.
 
 그리고 이 container의 gateway는 docker0에 설정된 ip인 172.17.0.1로 되어져 있다.
 
-	$docker exec {container id} route
+> -	$docker exec {container id} route
+ 
+ ![image](https://user-images.githubusercontent.com/20153890/40032236-3d40e7c0-582e-11e8-9c73-9e0bb51c7446.png)
  
 Container 내부의 모든 packet은 default인 172.17.0.1(docker0의 ip)로 가게 된다.
 
