@@ -2,7 +2,7 @@
 Docker Container Network에 대한 이해
 ==================================
 
-## 1. docker0와 container network의 구조 ##
+## docker0와 container network의 구조 ##
  
 **NOTE**
 
@@ -12,31 +12,38 @@ Docker Container Network에 대한 이해
 
  ![image](https://user-images.githubusercontent.com/20153890/40031808-49f6a9f2-582c-11e8-9c51-052ad4ddcbcf.png)
 
-## 2. docker0 interface ##
+## 1. docker0 interface ##
 **Docker host를 설치한 후 host의 network interface를 보면, docker 0 이라는 interface를 볼 수 있다.**
 
 >	- $ifconfig 
 
-이 docker0 interface의 특징은, 
-> - 1. IP는 자동으로 172.17.0.1로 배정된다. 
-> - 2. IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
-> - 3. 이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
 
-즉 docker0은 Container가 통신하기 위한 virtual bridge라고 볼 수 있다. 
+![image](https://user-images.githubusercontent.com/20153890/40032017-392a7c56-582d-11e8-956c-5dea8308f525.png)
+
+이 docker0 interface의 특징은, 
+> - * IP는 자동으로 172.17.0.1로 배정된다. 
+> - * IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
+> - * 이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
+
+즉 docker0은 Container가 통신하기 위한 virtual bridge라고 볼 수 있다.
+
 하나의 Container가 생성시, 이 bridge에 container의 interface가 하나씩 binding되는 형태이다.
+
 그리고 container가 running될 때 마다 vethXXXX라는 이름의 interface가 attach되는 형태이다.
 
 결론적으로 container가 외부로 통신할 때는 무조건 docker0 interface를 지나야 한다.
 
 또한 docker0의 ip는 자동으로 172.17.0.1로 설정되고, subnet mask는 255.255.0.0 (172.17.0.0/16) 으로 설정된다.
-따라서 이 subnet 정보는 container가 생성될 때마다 container가 할당받게 될 IP의 range를 결정하게 된다.
 
-즉 모든 container는 172.17.XX.YY 대역에서 IP를 하나씩 할당받게 된다.
+이 subnet 정보는 container가 생성될 때마다 container가 할당받게 될 IP의 range를 결정하게 된다.
+
+**즉 모든 container는 172.17.XX.YY 대역에서 IP를 하나씩 할당받게 된다.**
 
  
 
-<Container Network의 구조>
-위에서 본 host에 container를 생성하게 되면, 각 conatiner는 격리된 공간을 할당받는다.
+## 2. container Network의 구조 ##
+
+docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격리된 공간을 할당받는다.
 
 그렇다면 이 격리된 container는 어떻게 외부(또 다른 container로) 와 통신을 할까?
   
