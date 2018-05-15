@@ -21,9 +21,9 @@ Docker Container Network에 대한 이해
 ![image](https://user-images.githubusercontent.com/20153890/40032017-392a7c56-582d-11e8-956c-5dea8308f525.png)
 
 이 docker0 interface의 특징은, 
-> - * IP는 자동으로 172.17.0.1로 배정된다. 
-> - * IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
-> - * 이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
+> -   IP는 자동으로 172.17.0.1로 배정된다. 
+> -   IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
+> -   이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
 
 즉 docker0은 Container가 통신하기 위한 virtual bridge라고 볼 수 있다.
 
@@ -54,7 +54,7 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당되고,
 다른 한쪽은 vethXXX라는 이름으로 docker0 bridge에 binding된다.
 
-> - $ip link
+> -  $ip link
  
 ![image](https://user-images.githubusercontent.com/20153890/40032391-e8fee030-582e-11e8-8a21-2a4290d5694e.png)
 
@@ -64,22 +64,24 @@ container를 하나 올린 상태에서 link를 확인해보면, running중인 c
 그럼 container내부에 할당된 eth0 interface는 어떻게 확인할까?
 이는 해당 namespace에서만 보이도록 격리되어 있으므로 running중인 container 내부에서 확인해야 한다.
 
-> -	$docker exec {container id} ifconfig eth0
+> -	 $docker exec {container id} ifconfig eth0
 
 ![image](https://user-images.githubusercontent.com/20153890/40032438-1c1dccba-582f-11e8-8976-2823db34157e.png)
 
 container안에 외부 통신을 위한 eth0 interface가 있는 것을 볼 수 있고, 
 172.17.0.2라는 IP가 할당되었으며, netmask도 255.255.0.0으로 설정되어져 있는 것을 볼 수 있다.
 
-그리고 이 container의 gateway는 docker0에 설정된 ip인 172.17.0.1로 되어져 있다.
+**그리고 이 container의 gateway는 docker0에 설정된 ip인 172.17.0.1로 되어져 있다.**
 
-> -	$docker exec {container id} route
+> -	 $docker exec {container id} route
  
- ![image](https://user-images.githubusercontent.com/20153890/40032236-3d40e7c0-582e-11e8-9c73-9e0bb51c7446.png)
- 
-Container 내부의 모든 packet은 default인 172.17.0.1(docker0의 ip)로 가게 된다.
+![image](https://user-images.githubusercontent.com/20153890/40032483-48f775e2-582f-11e8-9699-ddb224290b96.png)
+
+Container 내부의 모든 packet은 default인 172.17.0.1(docker0의 ip)로 전송된다.
 
 지금까지 docker의 bridge모드에 대한 설명을 해보았다.
+
 brige모드는 docker network의 default설정이자, 가장 많이 쓰이는 방식이다.
+
 
 
