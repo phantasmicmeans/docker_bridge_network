@@ -52,7 +52,7 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 먼저 container가 생성되면, 해당 container에는 pair (peer) interface라고 하는 한 쌍의 interface가 생성된다.
 이 pair interface는 두 interface가 한쌍으로 구성되고, 마치 direct로 연결한 두 대의 PC처럼 packet을 주고받는다.
 
-즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당되고,
+즉 container 생성시, pair interface의 한쪽은 container내부에 eh0이라는 이름으로 할당되고,
 다른 한쪽은 vethXXX라는 이름으로 docker0 bridge에 binding된다.
 
 > -     $ip link
