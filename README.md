@@ -15,7 +15,8 @@ Docker Container Network에 대한 이해
 ## 1. docker0 interface ##
 **Docker host를 설치한 후 host의 network interface를 보면, docker 0 이라는 interface를 볼 수 있다.**
 
->	- $ifconfig 
+
+>	-     $ifconfig 
 
 
 ![image](https://user-images.githubusercontent.com/20153890/40032017-392a7c56-582d-11e8-956c-5dea8308f525.png)
@@ -54,7 +55,7 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당되고,
 다른 한쪽은 vethXXX라는 이름으로 docker0 bridge에 binding된다.
 
-> -  $ip link
+> -     $ip link
  
 ![image](https://user-images.githubusercontent.com/20153890/40032391-e8fee030-582e-11e8-8a21-2a4290d5694e.png)
 
@@ -64,7 +65,7 @@ container를 하나 올린 상태에서 link를 확인해보면, running중인 c
 그럼 container내부에 할당된 eth0 interface는 어떻게 확인할까?
 이는 해당 namespace에서만 보이도록 격리되어 있으므로 running중인 container 내부에서 확인해야 한다.
 
-> -	 $docker exec {container id} ifconfig eth0
+> -	    $docker exec {container id} ifconfig eth0
 
 ![image](https://user-images.githubusercontent.com/20153890/40032438-1c1dccba-582f-11e8-8976-2823db34157e.png)
 
@@ -73,7 +74,7 @@ container안에 외부 통신을 위한 eth0 interface가 있는 것을 볼 수 
 
 **그리고 이 container의 gateway는 docker0에 설정된 ip인 172.17.0.1로 되어져 있다.**
 
-> -	 $docker exec {container id} route
+> -	    $docker exec {container id} route
  
 ![image](https://user-images.githubusercontent.com/20153890/40032483-48f775e2-582f-11e8-9699-ddb224290b96.png)
 
