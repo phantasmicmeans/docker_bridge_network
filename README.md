@@ -28,13 +28,11 @@ Docker Container Network에 대한 이해
 즉 docker0은 Container가 통신하기 위한 virtual bridge라고 볼 수 있다.
 
 하나의 Container가 생성시, 이 bridge에 container의 interface가 하나씩 binding되는 형태이다.
-
 그리고 container가 running될 때 마다 vethXXXX라는 이름의 interface가 attach되는 형태이다.
 
 결론적으로 container가 외부로 통신할 때는 무조건 docker0 interface를 지나야 한다.
 
 또한 docker0의 ip는 자동으로 172.17.0.1로 설정되고, subnet mask는 255.255.0.0 (172.17.0.0/16) 으로 설정된다.
-
 이 subnet 정보는 container가 생성될 때마다 container가 할당받게 될 IP의 range를 결정하게 된다.
 
 **즉 모든 container는 172.17.XX.YY 대역에서 IP를 하나씩 할당받게 된다.**
@@ -47,14 +45,16 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 
 그렇다면 이 격리된 container는 어떻게 외부(또 다른 container로) 와 통신을 할까?
   
+![image](https://user-images.githubusercontent.com/20153890/40032150-c9f5701a-582d-11e8-8813-1c292cba2e71.png)
+
 
 먼저 Container가 생성되면, 해당 container에는 pair (peer) interface라고 하는 한 쌍의 interface가 생성된다.
-이 pairt interface는 두 interface가 한쌍으로 구성되고, 마치 direct로 연결한 두 대의 PC처럼 packet을 주고받는다.
+이 pair interface는 두 interface가 한쌍으로 구성되고, 마치 direct로 연결한 두 대의 PC처럼 packet을 주고받는다.
 
-즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당된다.
-그리고 다른 하나는 vethXXX라는 이름으로 docker0 bridge에 binding된다.
+즉 container 생성시, pair interface의 한쪽은 container내부에 할당되고, eh0이라는 이름으로 할당되고,
+다른 한쪽은 vethXXX라는 이름으로 docker0 bridge에 binding된다.
 
-	$ip link
+> - $ip link
  
 
 Container를 하나 올린 상태에서 link를 확인해보면, running중인 container는 vethXXX라는 이름으로 docker0 bridge에 연결되어 있는 것을 확인 할 수 있다.
