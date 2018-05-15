@@ -56,10 +56,11 @@ docker는 host에 container를 생성하게 되었을때, 각 conatiner는 격�
 
 > - $ip link
  
-![image](https://user-images.githubusercontent.com/20153890/40032227-344253ca-582e-11e8-8fd2-8433fdd2e6fd.png)
+![image](https://user-images.githubusercontent.com/20153890/40032391-e8fee030-582e-11e8-8a21-2a4290d5694e.png)
 
 container를 하나 올린 상태에서 link를 확인해보면, running중인 container는 vethXXX라는 이름으로 docker0 bridge에 연결되어 있는 것을 확인 할 수 있다.
  
+ 
 그럼 container내부에 할당된 eth0 interface는 어떻게 확인할까?
 이는 해당 namespace에서만 보이도록 격리되어 있으므로 running중인 container 내부에서 확인해야 한다.
 
