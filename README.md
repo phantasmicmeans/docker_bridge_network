@@ -66,7 +66,7 @@ container를 하나 올린 상태에서 link를 확인해보면, running중인 c
 
 > -	$docker exec {container id} ifconfig eth0
 
-![image](https://user-images.githubusercontent.com/20153890/40032232-3b96a874-582e-11e8-9a9e-6d2f1f7d6a0a.png)
+![image](https://user-images.githubusercontent.com/20153890/40032438-1c1dccba-582f-11e8-8976-2823db34157e.png)
 
 container안에 외부 통신을 위한 eth0 interface가 있는 것을 볼 수 있고, 
 172.17.0.2라는 IP가 할당되었으며, netmask도 255.255.0.0으로 설정되어져 있는 것을 볼 수 있다.
