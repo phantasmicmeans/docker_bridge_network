@@ -2,6 +2,8 @@
 Docker Container Network에 대한 이해
 ==================================
 
+by S.M.LEE
+
 ## <docker0, container network의 구조> ##
  
 **NOTE**
@@ -76,11 +78,13 @@ container안에 외부 통신을 위한 eth0 interface가 있는 것을 볼 수 
 
 > -	    $docker exec {container id} route
  
-![image](https://user-images.githubusercontent.com/20153890/40032483-48f775e2-582f-11e8-9699-ddb224290b96.png)
+![image](https://user-images.githubusercontent.com/20153890/40033675-6247c2ea-5834-11e8-95f2-98df9023822e.png)
 
 Container 내부의 모든 packet은 default인 172.17.0.1(docker0의 ip)로 전송된다.
 
-지금까지 docker의 bridge모드에 대한 설명을 해보았다.
+
+
+지금까지 docker0 bridge mode, container network에 대해 설명을 해보았다.
 
 brige모드는 docker network의 default설정이자, 가장 많이 쓰이는 방식이다.
 
