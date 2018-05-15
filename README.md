@@ -1,23 +1,26 @@
 
-##Docker Container Network에 대한 이해##
+Docker Container Network에 대한 이해
+==================================
 
-1. docker0와 container network의 구조
-
+## 1. docker0와 container network의 구조 ##
  
-Docker의 network 구조를 간단히 도식화한 것이다.
-Docker를 설치하면 가장 먼저 볼 수 있는 docker0 interface와 container network에 대해 알아본다.
- 
+**NOTE**
 
-<docker0 interface>
-Docker host를 설치한 후 host의 network interface를 보면, docker 0 이라는 interface를 볼 수 있다.
+* 아래 그림은 docker의 network 구조를 간단히 도식화한 것이다.
 
-	$ifconfig 
- 
+* 여기서는 docker를 설치하면 가장 먼저 볼 수 있는 docker0 interface와 container network에 대해 알아본다.
+
+ ![image](https://user-images.githubusercontent.com/20153890/40031808-49f6a9f2-582c-11e8-9c51-052ad4ddcbcf.png)
+
+## 2. docker0 interface ##
+**Docker host를 설치한 후 host의 network interface를 보면, docker 0 이라는 interface를 볼 수 있다.**
+
+>	- $ifconfig 
 
 이 docker0 interface의 특징은, 
-1. IP는 자동으로 172.17.0.1로 배정된다. 
-2. IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
-3. 이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
+> - 1. IP는 자동으로 172.17.0.1로 배정된다. 
+> - 2. IP는 DHCP로 자동할당이 되는 것이 아니고, docker 내부 로직에 따라 자동할당 된다.
+> - 3. 이 docker0은 일반적은 interface가 아니고, virtual ethernet bridge이다.
 
 즉 docker0은 Container가 통신하기 위한 virtual bridge라고 볼 수 있다. 
 하나의 Container가 생성시, 이 bridge에 container의 interface가 하나씩 binding되는 형태이다.
