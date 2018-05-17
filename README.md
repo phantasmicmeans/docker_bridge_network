@@ -89,4 +89,28 @@ Container 내부의 모든 packet은 default인 172.17.0.1(docker0의 ip)로 전
 brige모드는 docker network의 default설정이자, 가장 많이 쓰이는 방식이다.
 
 
+## <container network 외부 통신 구조 > ##
 
+
+## 1. docker0 interface ##
+
+여기서는 container가 외부와 연결되기 위해 어떤 구조로 동작하는지 알아보겠다.
+
+** Container Port 를 외부로 노출시키기 ** 
+
+container 생성시, 각 container에는 격리된 네트워크 환경이 부여된다. 그리고 각 container는 Docker host와 통신을 위해
+linux bridge방식으로 binding되어져 있는 형태이다. 따라서 Docker host내의 container들은 자신이 할당받은 private ip(172.0.~)을 통해 
+통신이 가능하다.
+
+예를들어 Maven을 이용해 Spring boot project를 build하고, 생성된 jar파일을 실행하여 WAS를 container로 서비스한다고 하자.
+이 WAS의 port가 8761이라고 할때 이 port는 반드시 외부와 통신이 되어야만 서비스가 가능하다.
+
+그러나 container는 private ip를 가지고 있고, bridge형태로 Docker host와 연결되어 있기 때문에 직접적으로 외부와의 통신은 불가능하다.
+
+따라서 외부와의 통신을 위해 container를 외부로 노출할 port를 지정해주어야 한다.
+
+> -	    $docker run -d -p 8761:8761 {container id or Image} 
+
+-p option은 container port와 외부 port를 binding할때 사용하는 option이다.
+
+> -	    $docker ps | awk  '/PORTS/{print $7} {print$11}'
