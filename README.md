@@ -92,11 +92,9 @@ brige모드는 docker network의 default설정이자, 가장 많이 쓰이는 �
 ## <container network 외부 통신 구조 > ##
 
 
-## 1. docker0 interface ##
-
 여기서는 container가 외부와 연결되기 위해 어떤 구조로 동작하는지 알아보겠다.
 
-** Container Port 를 외부로 노출시키기 ** 
+## 1. container port 를 외부로 노출시키기 ##
 
 container 생성시, 각 container에는 격리된 네트워크 환경이 부여된다. 그리고 각 container는 Docker host와 통신을 위해
 linux bridge방식으로 binding되어져 있는 형태이다. 따라서 Docker host내의 container들은 자신이 할당받은 private ip(172.0.~)을 통해 
@@ -117,17 +115,21 @@ linux bridge방식으로 binding되어져 있는 형태이다. 따라서 Docker 
 
 ![image](https://user-images.githubusercontent.com/20153890/40152472-5234faac-59c0-11e8-9ae5-1a1ca90bac99.png)
 
+
 위 명령어를 실행하면, 외부 port와 binding 되어 있는것을 볼 수 있다.
 이는 Docker host의 8761 port로 요청이 들어오면 실행중인 container의 8761 port로 forwarding하겠다는 의미이다.
 
+
 > -	    $netstat -tnlp | grep 8761
 
+
 ![image](https://user-images.githubusercontent.com/20153890/40152624-fbb70048-59c0-11e8-959f-08f19ade5395.png)
+
 
 그리고 다음과 같이 LISTEN 중인 상태를 확인하면, 8761 port가 docker-proxy라는 process에 의해 활성화 되어져 있는것을 볼 수 있다.
 
 
-** docker-proxy란 ** 
+## 2. docker-proxy란 ##
 
 Docker host로 들어온 요청을 container로 넘긴다. 즉 host가 받은 패킷을 그대로 container의 port로 넘기는 역할을 한다.
 
@@ -137,5 +139,15 @@ container 실행시, port를 외부에 노출시키면 docker host에는 docker-
 하지만 docker-proxy와 관계없이 docker host의 iptables에 의해 container로 패킷이 전달된다.
 따라서 docker-prxoy process를 kill해도 패킷이 container로 전달되는데 문제가 없다.
 
-** Docker iptables ** 
+## 3. docker iptables ##
+
+> -	    $iptables -t nat -L -n
+
+
+![image](https://user-images.githubusercontent.com/20153890/40152882-1dc7376a-59c2-11e8-8c52-be778ecb04f0.png)
+
+Docker host의 iptables 내역이다.
+
+들어온 요청은 PREROUTING -> DOCKER Chain으로 전달된다. DOCKER Chain부분을 살펴보면 tcp dpt:8761 to:172.17.0.2:8761 라인을 볼수 있다.
+이는 DNAT로 8761 port로 들어온 패킷 -> 172.17.0.2인 IP를 가진 container의 8761 port로 port forwading 된다는 의미이다.
 
