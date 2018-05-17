@@ -119,3 +119,23 @@ linux bridge방식으로 binding되어져 있는 형태이다. 따라서 Docker 
 
 위 명령어를 실행하면, 외부 port와 binding 되어 있는것을 볼 수 있다.
 이는 Docker host의 8761 port로 요청이 들어오면 실행중인 container의 8761 port로 forwarding하겠다는 의미이다.
+
+> -	    $netstat -tnlp | grep 8761
+
+![image](https://user-images.githubusercontent.com/20153890/40152624-fbb70048-59c0-11e8-959f-08f19ade5395.png)
+
+그리고 다음과 같이 LISTEN 중인 상태를 확인하면, 8761 port가 docker-proxy라는 process에 의해 활성화 되어져 있는것을 볼 수 있다.
+
+
+** docker-proxy란 ** 
+
+Docker host로 들어온 요청을 container로 넘긴다. 즉 host가 받은 패킷을 그대로 container의 port로 넘기는 역할을 한다.
+
+container 실행시, port를 외부에 노출시키면 docker host에는 docker-proxy라는 process가 생성된다.
+예를들어 두개의 port를 외부에 노출시키면 , 두개의 docker-proxy process가 생성되는 것이다. 
+
+하지만 docker-proxy와 관계없이 docker host의 iptables에 의해 container로 패킷이 전달된다.
+따라서 docker-prxoy process를 kill해도 패킷이 container로 전달되는데 문제가 없다.
+
+** Docker iptables ** 
+
