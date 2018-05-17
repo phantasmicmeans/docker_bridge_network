@@ -114,3 +114,8 @@ linux bridge방식으로 binding되어져 있는 형태이다. 따라서 Docker 
 -p option은 container port와 외부 port를 binding할때 사용하는 option이다.
 
 > -	    $docker ps | awk  '/PORTS/{print $7} {print$11}'
+
+![image](https://user-images.githubusercontent.com/20153890/40152472-5234faac-59c0-11e8-9ae5-1a1ca90bac99.png)
+
+위 명령어를 실행하면, 외부 port와 binding 되어 있는것을 볼 수 있다.
+이는 Docker host의 8761 port로 요청이 들어오면 실행중인 container의 8761 port로 forwarding하겠다는 의미이다.
