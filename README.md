@@ -2,7 +2,7 @@
 Docker Container Network에 대한 이해
 ==================================
 
-by S.M.LEE
+*by S.M.LEE*
 
 ## <docker0, container network의 구조> ##
  
